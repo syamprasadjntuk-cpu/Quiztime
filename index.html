@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>G 💜 S Valentine</title>
+<style>
+html, body {
+  margin:0; padding:0; height:100%; width:100%;
+  font-family:'Segoe UI',sans-serif;
+  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+  overflow:hidden; position:relative;
+}
+
+/* Card styling */
+.card{
+  background: rgba(255,255,255,0.95);
+  padding:30px;
+  border-radius:20px;
+  width:90%;
+  max-width:450px;
+  min-height:450px;
+  text-align:center;
+  box-shadow:0 8px 25px rgba(0,0,0,0.3);
+  z-index:20;
+  position:relative;
+  margin:50px auto;
+}
+
+/* Titles */
+h1,h2{color:#e91e63;}
+
+/* Buttons */
+button{width:100%;padding:12px;margin:6px 0;border-radius:20px;border:none;font-size:16px;cursor:pointer;}
+.option{background:#ffe4ec;}
+.yes{background:#9c27b0;color:white;}
+.no{background:#ccc;position:absolute;}
+.hidden{display:none;}
+.message{font-weight:bold;margin-top:12px;font-size:16px;}
+
+/* Fireworks */
+.firework{position:absolute;font-size:40px;animation:boom 1s ease-out forwards;}
+@keyframes boom{0%{transform:scale(0);opacity:1;}100%{transform:scale(3);opacity:0;}}
+
+/* Cry emoji */
+.cry{font-size:60px;animation:shake 0.8s;}
+@keyframes shake{0%{transform:rotate(0);}25%{transform:rotate(-10deg);}50%{transform:rotate(10deg);}100%{transform:rotate(0);}}
+
+/* Floating purple hearts */
+.heart{position:fixed;bottom:0;font-size:50px;color:purple;animation:float 4s linear forwards; pointer-events:none;}
+.big-heart{font-size:80px !important;}
+@keyframes float{to{transform:translateY(-100vh);opacity:0;}}
+
+/* Red G&S heart below card */
+.gs-heart{
+  position:absolute; top:100%; left:50%;
+  transform:translate(-50%,10%);
+  width:150px; height:150px;
+  background:red;
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:30;
+  font-size:40px; color:white; font-weight:bold;
+  text-align:center;
+  line-height:1.2;
+  animation:gsPulse 2s ease-in-out infinite;
+}
+@keyframes gsPulse{
+  0%{transform:translate(-50%,10%) scale(1);}
+  50%{transform:translate(-50%,15%) scale(1.1);}
+  100%{transform:translate(-50%,10%) scale(1);}
+}
+
+/* YES screen symbol */
+#yesScreen{
+  margin-top:20px;
+}
+#yesScreen h1{color:#9c27b0;}
+#yesScreen .love-symbol{font-size:120px;}
+
+/* Background symbols */
+.bg-symbol{
+  position:absolute;
+  font-size:50px;
+  opacity:0.4;
+  pointer-events:none;
+  animation:floatRotate linear infinite;
+}
+@keyframes floatRotate{
+  0%{transform:translate(0,0) rotate(0deg);}
+  50%{transform:translate(20px,-50px) rotate(180deg);}
+  100%{transform:translate(-20px,-100px) rotate(360deg);}
+}
+</style>
+</head>
+<body>
+
+<!-- Background love symbols -->
+<div id="bg"></div>
+
+<!-- Card -->
+<div class="card" id="card">
+  <h1 id="question"></h1>
+  <div id="options"></div>
+  <div id="message" class="message"></div>
+
+  <div id="valentine" class="hidden">
+    <h2>💜 Will you be my Valentine? 💜</h2>
+    <button class="yes" onclick="yesClicked()">YES 💕</button>
+    <button class="no" id="noBtn" onclick="noClicked()">NO 🙃</button>
+    <div id="noMsg" class="message"></div>
+  </div>
+
+  <div id="yesScreen" class="hidden">
+    <h1>💜 She said YES 💜</h1>
+    <p>You just made my heart dance 🥰</p>
+    <!-- Big love symbol after YES -->
+    <div class="love-symbol">💝</div>
+  </div>
+
+  <!-- Red heart with initials -->
+  <div id="gsHeart" class="gs-heart">G & S</div>
+</div>
+
+<script>
+// Quiz
+const quiz=[
+  {q:"What is my favorite food?",options:["Pizza","Biryani","Burger","Dosa"],answer:"Biryani"},
+  {q:"Where did I first propose you?",options:["Restaurant","Beach","On foot path","Temple"],answer:"On foot path"},
+  {q:"What is my childhood nick name?",options:["Babu","Chinni","Bunny","Kanna"],answer:"Chinni"},
+  {q:"What do I like always about you?",options:["Smile","Anger","Cooking","Style"],answer:"Anger"}
+];
+let i=0,noCount=0;
+const wrongMessages=[
+"Oops! Not correct 😜","Try again! 🙃","Wrong choice 😏","Are you serious? 😂",
+"Wrong answer, but cute 😅","Ha! Nope 😆","Try pressing the right button 💕","Wrong! But I still love you 😍"
+];
+const noMessages=[
+"Wrong option selected 😏","NO is disabled forever 😂","Universe says YES only 🌌","Nice try 😌","Finger slipped? 😜",
+"NO ran away 🏃","System error ❌","Try again 😍","Nope nope nope 🙅"
+];
+
+function loadQ(){
+  document.getElementById("question").innerText=quiz[i].q;
+  const o=document.getElementById("options");
+  o.innerHTML="";
+  quiz[i].options.forEach(opt=>{
+    let b=document.createElement("button");
+    b.className="option";
+    b.innerText=opt;
+    b.onclick=()=>answer(opt);
+    o.appendChild(b);
+  });
+  document.getElementById("message").innerHTML="";
+}
+
+function answer(sel){
+  const msg=document.getElementById("message");
+  if(sel===quiz[i].answer){
+    fireworks();
+    i++;
+    if(i<quiz.length){setTimeout(loadQ,1000);}
+    else{setTimeout(showValentine,1000);}
+  } else {
+    const idx=Math.floor(Math.random()*wrongMessages.length);
+    msg.innerHTML='<div class="cry">😭</div><br>'+wrongMessages[idx];
+    setTimeout(()=>{msg.innerHTML="";},1000);
+  }
+}
+
+function fireworks(){
+  for(let j=0;j<6;j++){
+    let f=document.createElement("div");
+    f.className="firework"; f.innerText="🎆";
+    f.style.left=Math.random()*100+"%";
+    f.style.top=Math.random()*100+"%";
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),1000);
+  }
+}
+
+function noClicked(){
+  const r=Math.random(), btn=document.getElementById("noBtn"), card=document.getElementById("card");
+  document.getElementById("noMsg").innerText="";
+  if(r<0.5){
+    // move NO somewhere random inside card
+    const cardRect = card.getBoundingClientRect();
+    const maxX = cardRect.width - btn.offsetWidth;
+    const maxY = cardRect.height - btn.offsetHeight;
+    const randX = Math.random() * maxX;
+    const randY = Math.random() * maxY;
+    btn.style.left = randX + "px";
+    btn.style.top = randY + "px";
+  } else {
+    document.getElementById("noMsg").innerText=noMessages[noCount%noMessages.length];
+    noCount++;
+  }
+}
+
+function showValentine(){
+  document.getElementById("question").classList.add("hidden");
+  document.getElementById("options").classList.add("hidden");
+  document.getElementById("message").classList.add("hidden");
+  document.getElementById("valentine").classList.remove("hidden");
+}
+
+function yesClicked(){
+  document.getElementById("valentine").classList.add("hidden");
+  document.getElementById("yesScreen").classList.remove("hidden");
+
+  // Purple hearts bigger and continuous
+  setInterval(()=>{
+    let h=document.createElement("div");
+    h.className="heart big-heart"; h.innerText="💜";
+    h.style.left=Math.random()*100+"%";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),4000);
+  },300);
+}
+
+// Start quiz
+loadQ();
+
+// Fill pink space with floating love symbols
+const symbols = ["💜","💖","💕","💘","💝","💞"];
+const bg = document.getElementById("bg");
+for(let y=0; y<15; y++){
+  for(let x=0; x<12; x++){
+    let s = document.createElement("div");
+    s.className = "bg-symbol";
+    s.innerText = symbols[Math.floor(Math.random()*symbols.length)];
+    s.style.top = (y*7+Math.random()*3)+"%";
+    s.style.left = (x*7+Math.random()*3)+"%";
+    s.style.animationDuration = (8+Math.random()*5)+"s"; 
+    s.style.animationDelay = (Math.random()*5)+"s";
+    bg.appendChild(s);
+  }
+}
+</script>
+</body>
+</html>
