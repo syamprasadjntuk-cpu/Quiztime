@@ -62,37 +62,40 @@ button{
 @keyframes float{to{transform:translateY(-100vh);opacity:0;}}
 
 /* Red heart with G&S initials */
-.gs-heart{
-  position:absolute; top:120%; left:50%;
-  transform:translate(-50%,-50%);
-  width:280px; height:280px; /* bigger heart */
-  background:red;
-  clip-path: polygon(
-    50% 0%, 61% 8%, 68% 18%, 72% 29%, 75% 40%, 76% 50%,
-    75% 60%, 72% 70%, 68% 78%, 61% 87%, 50% 100%, 39% 87%,
-    32% 78%, 28% 70%, 25% 60%, 24% 50%, 25% 40%, 28% 29%,
-    32% 18%, 39% 8%
-  ); /* proper heart shape */
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:30;
-  font-size:60px; color:white; font-weight:bold;
-  text-align:center;
-  line-height:1.2;
-  animation:beat 1s infinite;
-  transition: transform 0.5s ease;
+.gs-heart {
+  position: absolute;
+  top: 100%; /* below white card */
+  left: 50%;
+  transform: translate(-50%, 20px); /* small gap */
+  width: 200px;
+  height: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50px;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.2;
+  z-index: 30;
+  animation: beat 1s infinite;
 }
-.gs-heart.active{
-  animation:beatFast 0.5s infinite;
+.gs-heart.active::before,
+.gs-heart.active::after {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 160px;
+  background: red;
+  border-radius: 100px 100px 0 0;
+  top: 0;
 }
-@keyframes beat{
-  0%,100%{transform:translate(-50%,-50%) scale(1);}
-  50%{transform:translate(-50%,-50%) scale(1.1);}
-}
-@keyframes beatFast{
-  0%,100%{transform:translate(-50%,-50%) scale(1.1);}
-  50%{transform:translate(-50%,-50%) scale(1.3);}
+.gs-heart.active::before { left: 50px; transform: rotate(-45deg); transform-origin:0 100%; }
+.gs-heart.active::after { left: 50px; transform: rotate(45deg); transform-origin:100% 100%; }
+
+@keyframes beat {
+  0%,100%{transform:translate(-50%,20px) scale(1);}
+  50%{transform:translate(-50%,20px) scale(1.2);}
 }
 
 /* YES screen symbol */
@@ -111,7 +114,7 @@ button{
   opacity:0.6;
   pointer-events:none;
   transform-origin:center;
-  font-size: 300% !important; /* 3x bigger */
+  font-size: 90px; /* large symbols */
 }
 
 /* Twinkle stars */
@@ -271,7 +274,7 @@ function yesClicked(){
 // Start quiz
 loadQ();
 
-// Dynamic background symbols (300% bigger)
+// Dynamic background symbols (large)
 const symbols = ["💌","💖","💕","💝","🥰","💞","💘","💏","🌹","🌸","🌺","🦋","🍫","🧸"];
 const bg = document.getElementById("bg");
 for(let y=0; y<10; y++){
@@ -281,7 +284,7 @@ for(let y=0; y<10; y++){
     s.innerText = symbols[Math.floor(Math.random()*symbols.length)];
     s.style.top = (y*10+Math.random()*5)+"%";
     s.style.left = (x*12+Math.random()*5)+"%";
-    const size = 90 + Math.random()*180; // 3x bigger
+    const size = 90 + Math.random()*180; // large
     s.style.fontSize = size + "px"; 
     const duration = 8 + Math.random()*7;
     const rotate = Math.random()*360;
