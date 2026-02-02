@@ -50,13 +50,13 @@ button{width:100%;padding:12px;margin:6px 0;border-radius:20px;border:none;font-
 .big-heart{font-size:80px !important;}
 @keyframes float{to{transform:translateY(-100vh);opacity:0;}}
 
-/* Red G&S heart below card */
+/* Red heart with G&S initials */
 .gs-heart{
   position:absolute; top:100%; left:50%;
   transform:translate(-50%,10%);
   width:150px; height:150px;
   background:red;
-  border-radius:50%;
+  clip-path: polygon(50% 0%, 61% 12%, 75% 12%, 87% 25%, 87% 37%, 75% 50%, 50% 75%, 25% 50%, 13% 37%, 13% 25%, 25% 12%, 39% 12%);
   display:flex;
   justify-content:center;
   align-items:center;
@@ -64,12 +64,11 @@ button{width:100%;padding:12px;margin:6px 0;border-radius:20px;border:none;font-
   font-size:40px; color:white; font-weight:bold;
   text-align:center;
   line-height:1.2;
-  animation:gsPulse 2s ease-in-out infinite;
+  animation:beat 1s infinite;
 }
-@keyframes gsPulse{
-  0%{transform:translate(-50%,10%) scale(1);}
-  50%{transform:translate(-50%,15%) scale(1.1);}
-  100%{transform:translate(-50%,10%) scale(1);}
+@keyframes beat{
+  0%,100%{transform:translate(-50%,10%) scale(1);}
+  50%{transform:translate(-50%,10%) scale(1.1);}
 }
 
 /* YES screen symbol */
@@ -82,8 +81,8 @@ button{width:100%;padding:12px;margin:6px 0;border-radius:20px;border:none;font-
 /* Background symbols */
 .bg-symbol{
   position:absolute;
-  font-size:50px;
-  opacity:0.4;
+  font-size:40px;
+  opacity:0.5;
   pointer-events:none;
   animation:floatRotate linear infinite;
 }
@@ -115,8 +114,8 @@ button{width:100%;padding:12px;margin:6px 0;border-radius:20px;border:none;font-
   <div id="yesScreen" class="hidden">
     <h1>💜 She said YES 💜</h1>
     <p>You just made my heart dance 🥰</p>
-    <!-- Big love symbol after YES -->
-    <div class="love-symbol">💝</div>
+    <!-- Big boy and girl hugging symbol -->
+    <div class="love-symbol">👩‍❤️‍👨</div>
   </div>
 
   <!-- Red heart with initials -->
@@ -223,7 +222,7 @@ function yesClicked(){
 loadQ();
 
 // Fill pink space with floating love symbols
-const symbols = ["💜","💖","💕","💘","💝","💞"];
+const symbols = ["💌","💖","💕","💝","🥰","💞","💘","💏"];
 const bg = document.getElementById("bg");
 for(let y=0; y<15; y++){
   for(let x=0; x<12; x++){
