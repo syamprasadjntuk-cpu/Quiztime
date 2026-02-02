@@ -30,12 +30,22 @@ html, body {
 h1,h2{color:#e91e63;}
 
 /* Buttons */
-button{width:100%;padding:12px;margin:6px 0;border-radius:20px;border:none;font-size:16px;cursor:pointer;}
-.option{background:#ffe4ec;}
-.yes{background:#9c27b0;color:white;position:relative;}
-.no{background:#ccc;position:absolute;}
+button{
+  padding:12px; margin:6px 0; border-radius:20px; border:none; font-size:16px; cursor:pointer;
+}
+.option{background:#ffe4ec; width:100%;}
+.yes{background:#9c27b0;color:white; position:relative;}
+.no{background:#ccc; position:absolute; transition: all 0.5s ease;}
 .hidden{display:none;}
 .message{font-weight:bold;margin-top:12px;font-size:16px;}
+
+/* Bounce animation for playful effect */
+.no-bounce { animation: bounce 0.5s; }
+@keyframes bounce {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
 
 /* Fireworks */
 .firework{position:absolute;font-size:40px;animation:boom 1s ease-out forwards;}
@@ -95,10 +105,8 @@ button{width:100%;padding:12px;margin:6px 0;border-radius:20px;border:none;font-
 </head>
 <body>
 
-<!-- Background love symbols -->
 <div id="bg"></div>
 
-<!-- Card -->
 <div class="card" id="card">
   <h1 id="question"></h1>
   <div id="options"></div>
@@ -114,11 +122,9 @@ button{width:100%;padding:12px;margin:6px 0;border-radius:20px;border:none;font-
   <div id="yesScreen" class="hidden">
     <h1>💜 She said YES 💜</h1>
     <p>You just made my heart dance 🥰</p>
-    <!-- Big boy and girl hugging symbol -->
     <div class="love-symbol">👩‍❤️‍👨</div>
   </div>
 
-  <!-- Red heart with initials -->
   <div id="gsHeart" class="gs-heart">G & S</div>
 </div>
 
@@ -179,42 +185,51 @@ function fireworks(){
   }
 }
 
-// NO button behavior
+// Position NO button to right of YES inside card
+function positionNoButton(){
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+  noBtn.style.top = yesBtn.offsetTop + "px";
+  noBtn.style.left = (yesBtn.offsetLeft + yesBtn.offsetWidth + 10) + "px";
+}
+
+// NO button behavior (playful)
 const noBtn = document.getElementById("noBtn");
-noBtn.style.top = "50px"; // initial below YES button
-noBtn.style.left = "0px"; // align with card left
-noBtn.addEventListener("click", ()=>{
-  const r=Math.random();
-  const card=document.getElementById("card");
-  document.getElementById("noMsg").innerText="";
-  if(r<0.5){
-    // move NO somewhere random inside card
-    const cardRect = card.getBoundingClientRect();
-    const btnRect = noBtn.getBoundingClientRect();
-    const maxX = cardRect.width - btnRect.width;
-    const maxY = cardRect.height - btnRect.height;
-    const randX = Math.random() * maxX;
-    const randY = Math.random() * maxY;
-    noBtn.style.left = randX + "px";
-    noBtn.style.top = randY + "px";
-  } else {
-    document.getElementById("noMsg").innerText=noMessages[noCount%noMessages.length];
-    noCount++;
-  }
-});
+const card = document.getElementById("card");
+noBtn.addEventListener("mouseenter", moveNo);
+noBtn.addEventListener("click", moveNo);
+
+function moveNo(){
+  const maxX = card.clientWidth - noBtn.offsetWidth;
+  const maxY = card.clientHeight - noBtn.offsetHeight;
+  const randX = Math.random() * maxX;
+  const randY = Math.random() * maxY;
+  noBtn.style.left = randX + "px";
+  noBtn.style.top = randY + "px";
+
+  // bounce animation
+  noBtn.classList.remove("no-bounce");
+  void noBtn.offsetWidth; 
+  noBtn.classList.add("no-bounce");
+
+  // Show a funny NO message
+  document.getElementById("noMsg").innerText = noMessages[noCount % noMessages.length];
+  noCount++;
+}
 
 function showValentine(){
   document.getElementById("question").classList.add("hidden");
   document.getElementById("options").classList.add("hidden");
   document.getElementById("message").classList.add("hidden");
   document.getElementById("valentine").classList.remove("hidden");
+  positionNoButton();
 }
 
 function yesClicked(){
   document.getElementById("valentine").classList.add("hidden");
   document.getElementById("yesScreen").classList.remove("hidden");
 
-  // Purple hearts bigger and continuous
+  // continuous purple hearts
   setInterval(()=>{
     let h=document.createElement("div");
     h.className="heart big-heart"; h.innerText="💜";
@@ -227,8 +242,8 @@ function yesClicked(){
 // Start quiz
 loadQ();
 
-// Fill pink space with floating love symbols
-const symbols = ["💌","💖","💕","💝","🥰","💞","💘","💏"];
+// Background floating love symbols
+const symbols = ["💌","💖","💕","💝","🥰","💞","💘","💏","🌹","🌸","🌺","🦋","🍫","🧸"];
 const bg = document.getElementById("bg");
 for(let y=0; y<15; y++){
   for(let x=0; x<12; x++){
