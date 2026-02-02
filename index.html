@@ -62,40 +62,18 @@ button{
 @keyframes float{to{transform:translateY(-100vh);opacity:0;}}
 
 /* Red heart with G&S initials */
-.gs-heart {
-  position: absolute;
-  top: 100%; /* below white card */
-  left: 50%;
-  transform: translate(-50%, 20px); /* small gap */
-  width: 200px;
-  height: 180px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 50px;
-  color: white;
-  font-weight: bold;
-  text-align: center;
-  line-height: 1.2;
-  z-index: 30;
-  animation: beat 1s infinite;
+.gs-heart{
+  position:absolute;
+  top:110%; /* below white card */
+  left:50%;
+  transform:translate(-50%,0);
+  z-index:30;
+  animation:beat 1s infinite;
 }
-.gs-heart.active::before,
-.gs-heart.active::after {
-  content: "";
-  position: absolute;
-  width: 100px;
-  height: 160px;
-  background: red;
-  border-radius: 100px 100px 0 0;
-  top: 0;
-}
-.gs-heart.active::before { left: 50px; transform: rotate(-45deg); transform-origin:0 100%; }
-.gs-heart.active::after { left: 50px; transform: rotate(45deg); transform-origin:100% 100%; }
-
-@keyframes beat {
-  0%,100%{transform:translate(-50%,20px) scale(1);}
-  50%{transform:translate(-50%,20px) scale(1.2);}
+.gs-heart svg{width:200px; height:200px;}
+@keyframes beat{
+  0%,100%{transform:translate(-50%,0) scale(1);}
+  50%{transform:translate(-50%,0) scale(1.2);}
 }
 
 /* YES screen symbol */
@@ -154,7 +132,12 @@ button{
     <div class="love-symbol">👩‍❤️‍👨</div>
   </div>
 
-  <div id="gsHeart" class="gs-heart">G & S</div>
+  <div id="gsHeart" class="gs-heart">
+    <svg viewBox="0 0 512 512">
+      <path d="M256 464s-16-16-64-64c-40-40-96-96-96-160 0-44 36-80 80-80 28 0 52 16 64 32 12-16 36-32 64-32 44 0 80 36 80 80 0 64-56 120-96 160-48 48-64 64-64 64z" fill="red"/>
+      <text x="50%" y="55%" text-anchor="middle" fill="white" font-size="80" font-weight="bold" font-family="Segoe UI">G & S</text>
+    </svg>
+  </div>
 </div>
 
 <script>
