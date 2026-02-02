@@ -63,16 +63,21 @@ button{
 
 /* Red heart with G&S initials */
 .gs-heart{
-  position:absolute; top:110%; left:50%;
+  position:absolute; top:120%; left:50%;
   transform:translate(-50%,-50%);
-  width:220px; height:220px;
+  width:280px; height:280px; /* bigger heart */
   background:red;
-  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  clip-path: polygon(
+    50% 0%, 61% 8%, 68% 18%, 72% 29%, 75% 40%, 76% 50%,
+    75% 60%, 72% 70%, 68% 78%, 61% 87%, 50% 100%, 39% 87%,
+    32% 78%, 28% 70%, 25% 60%, 24% 50%, 25% 40%, 28% 29%,
+    32% 18%, 39% 8%
+  ); /* proper heart shape */
   display:flex;
   justify-content:center;
   align-items:center;
   z-index:30;
-  font-size:50px; color:white; font-weight:bold;
+  font-size:60px; color:white; font-weight:bold;
   text-align:center;
   line-height:1.2;
   animation:beat 1s infinite;
@@ -106,6 +111,7 @@ button{
   opacity:0.6;
   pointer-events:none;
   transform-origin:center;
+  font-size: 300% !important; /* 3x bigger */
 }
 
 /* Twinkle stars */
@@ -265,7 +271,7 @@ function yesClicked(){
 // Start quiz
 loadQ();
 
-// Dynamic background symbols
+// Dynamic background symbols (300% bigger)
 const symbols = ["💌","💖","💕","💝","🥰","💞","💘","💏","🌹","🌸","🌺","🦋","🍫","🧸"];
 const bg = document.getElementById("bg");
 for(let y=0; y<10; y++){
@@ -275,7 +281,7 @@ for(let y=0; y<10; y++){
     s.innerText = symbols[Math.floor(Math.random()*symbols.length)];
     s.style.top = (y*10+Math.random()*5)+"%";
     s.style.left = (x*12+Math.random()*5)+"%";
-    const size = 30 + Math.random()*60;
+    const size = 90 + Math.random()*180; // 3x bigger
     s.style.fontSize = size + "px"; 
     const duration = 8 + Math.random()*7;
     const rotate = Math.random()*360;
