@@ -32,7 +32,7 @@ h1,h2{color:#e91e63;}
 /* Buttons */
 button{width:100%;padding:12px;margin:6px 0;border-radius:20px;border:none;font-size:16px;cursor:pointer;}
 .option{background:#ffe4ec;}
-.yes{background:#9c27b0;color:white;}
+.yes{background:#9c27b0;color:white;position:relative;}
 .no{background:#ccc;position:absolute;}
 .hidden{display:none;}
 .message{font-weight:bold;margin-top:12px;font-size:16px;}
@@ -106,8 +106,8 @@ button{width:100%;padding:12px;margin:6px 0;border-radius:20px;border:none;font-
 
   <div id="valentine" class="hidden">
     <h2>💜 Will you be my Valentine? 💜</h2>
-    <button class="yes" onclick="yesClicked()">YES 💕</button>
-    <button class="no" id="noBtn" onclick="noClicked()">NO 🙃</button>
+    <button class="yes" id="yesBtn" onclick="yesClicked()">YES 💕</button>
+    <button class="no" id="noBtn">NO 🙃</button>
     <div id="noMsg" class="message"></div>
   </div>
 
@@ -179,23 +179,29 @@ function fireworks(){
   }
 }
 
-function noClicked(){
-  const r=Math.random(), btn=document.getElementById("noBtn"), card=document.getElementById("card");
+// NO button behavior
+const noBtn = document.getElementById("noBtn");
+noBtn.style.top = "50px"; // initial below YES button
+noBtn.style.left = "0px"; // align with card left
+noBtn.addEventListener("click", ()=>{
+  const r=Math.random();
+  const card=document.getElementById("card");
   document.getElementById("noMsg").innerText="";
   if(r<0.5){
     // move NO somewhere random inside card
     const cardRect = card.getBoundingClientRect();
-    const maxX = cardRect.width - btn.offsetWidth;
-    const maxY = cardRect.height - btn.offsetHeight;
+    const btnRect = noBtn.getBoundingClientRect();
+    const maxX = cardRect.width - btnRect.width;
+    const maxY = cardRect.height - btnRect.height;
     const randX = Math.random() * maxX;
     const randY = Math.random() * maxY;
-    btn.style.left = randX + "px";
-    btn.style.top = randY + "px";
+    noBtn.style.left = randX + "px";
+    noBtn.style.top = randY + "px";
   } else {
     document.getElementById("noMsg").innerText=noMessages[noCount%noMessages.length];
     noCount++;
   }
-}
+});
 
 function showValentine(){
   document.getElementById("question").classList.add("hidden");
